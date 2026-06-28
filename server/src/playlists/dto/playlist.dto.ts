@@ -1,4 +1,4 @@
-import { IsString, IsOptional, MaxLength, IsInt } from 'class-validator'
+import { IsString, IsOptional, MaxLength, IsInt } from 'class-validator';
 
 export class CreatePlaylistDto {
   @IsString()

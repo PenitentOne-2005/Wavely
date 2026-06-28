@@ -34,7 +34,7 @@ export class PlaylistsService {
     return this.findOneOrFail(id, userId);
   }
 
-  async update(userId: number, id:number, dto: UpdatePlaylistDto): Promise<Playlist> {
+  async update(userId: number, id: number, dto: UpdatePlaylistDto): Promise<Playlist> {
     const playlist = await this.findOneOrFail(id, userId);
 
     Object.assign(playlist, dto);
