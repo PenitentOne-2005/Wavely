@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth';
 import { PlaylistsModule } from './playlists';
 import { JamendoModule } from './jamendo';
+import { UsersModule } from './users';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { JamendoModule } from './jamendo';
       }),
     }),
     AuthModule,
+    UsersModule,
     PlaylistsModule,
     JamendoModule,
   ],

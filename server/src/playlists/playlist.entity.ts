@@ -7,7 +7,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { User } from '../auth';
+import { User } from '../users';
 import { Track } from '../tracks';
 
 @Entity({ name: 'playlists' })
