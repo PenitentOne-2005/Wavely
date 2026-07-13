@@ -31,16 +31,15 @@ const Player = () => {
 
   return (
     <div style={styles.playerBar}>
-      {/* Информация о треке */}
       <div style={styles.trackInfo}>
-        <div style={styles.trackName}>{currentTrack.name}</div>
-        <div style={styles.trackArtist}>{currentTrack.artist_name}</div>
+        <div style={styles.trackName}>{currentTrack.title}</div>
+        <div style={styles.trackArtist}>{currentTrack.artist}</div>
       </div>
 
       {/* Управление воспроизведением */}
       <div style={styles.controls}>
         <button onClick={togglePlay} style={styles.playButton}>
-          {isPlaying ? "⏸ Пауза" : "▶ Играть"}
+          {isPlaying ? "⏸" : "▶"}
         </button>
 
         {/* Прогресс-бар трека */}
@@ -109,11 +108,17 @@ const styles = {
   },
   playButton: {
     backgroundColor: "#fff",
+    color: "#000",
     border: "none",
-    borderRadius: "20px",
-    padding: "8px 24px",
-    fontWeight: "bold" as const,
+    borderRadius: "50%",
+    width: "40px",
+    height: "40px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "16px",
     cursor: "pointer",
+    flexShrink: 0,
   },
   progressContainer: {
     display: "flex",
