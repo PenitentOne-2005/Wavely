@@ -17,9 +17,11 @@ interface PlayerState {
   currentTime: number;
   duration: number;
   audioElement: HTMLAudioElement | null;
+  queue: Track[];
 
-  // Методы управления
   setTrack: (track: Track) => void;
+  setQueue: (tracks: Track[]) => void;
+  nextTrack: () => void;
   play: () => void;
   pause: () => void;
   togglePlay: () => void;
@@ -35,6 +37,24 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   currentTime: 0,
   duration: 0,
   audioElement: null,
+  queue: [],
+
+  setQueue: (tracks) => set({ queue: tracks }),
+
+  nextTrack: () => {
+    const { queue, currentTrack, setTrack } = get();
+    if (queue.length === 0 || !currentTrack) return;
+
+    const currentIndex = queue.findIndex(
+      (t) => t.audioUrl === currentTrack.audioUrl,
+    );
+
+    if (currentIndex !== -1 && currentIndex < queue.length - 1) {
+      setTrack(queue[currentIndex + 1]);
+    } else if (currentIndex === queue.length - 1) {
+      setTrack(queue[0]);
+    }
+  },
 
   initAudio: () => {
     if (typeof window === "undefined" || get().audioElement) return;
@@ -52,7 +72,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
     audio.addEventListener("ended", () => {
       set({ isPlaying: false, currentTime: 0 });
-      // Здесь в будущем можно будет вызывать метод nextTrack()
+      get().nextTrack();
     });
 
     set({ audioElement: audio });
