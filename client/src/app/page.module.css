@@ -4,3 +4,8 @@
   background-color: #121212;
   height: 100vh;
 }
+
+.content {
+  display: flex;
+  gap: 40px;
+}

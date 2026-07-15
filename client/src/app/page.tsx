@@ -7,6 +7,7 @@ import type { Track } from "./interface";
 import { api } from "@/api";
 import { usePlayerStore } from "@/store";
 import { Header, PlaylistList, TrackList } from "@/components";
+import { Loader } from "@/ui";
 import styles from "./page.module.css";
 
 const Home = () => {
@@ -151,18 +152,7 @@ const Home = () => {
   };
 
   if (loading) {
-    return (
-      <div
-        style={{
-          color: "#fff",
-          backgroundColor: "#121212",
-          height: "100vh",
-          padding: "20px",
-        }}
-      >
-        Загрузка приложения...
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
@@ -175,7 +165,7 @@ const Home = () => {
       />
 
       {/* Основной контент */}
-      <div style={{ display: "flex", gap: "40px" }}>
+      <div className={styles.content}>
         {/* 2. Компонент списка плейлистов */}
         <PlaylistList
           playlists={playlists}

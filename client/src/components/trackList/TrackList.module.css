@@ -1,0 +1,39 @@
+.container {
+  flex: 2;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  color: #fff;
+}
+
+.backButton {
+  background-color: transparent;
+  color: #1db954;
+  border: 1px solid #1db954;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.loading {
+  color: #fff;
+}
+
+.emptyState {
+  color: #b3b3b3;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import type { AuthDto } from "./interface";
 import { api } from "@/api";
+import styles from "./Login.module.css";
 
 const AuthPage = () => {
   const router = useRouter();
@@ -43,19 +44,21 @@ const AuthPage = () => {
   };
 
   return (
-    <main style={styles.container}>
-      <div style={styles.card}>
-        <h2>{isLogin ? "Войти в аккаунт" : "Регистрация"}</h2>
+    <main className={styles.container}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>
+          {isLogin ? "Войти в аккаунт" : "Регистрация"}
+        </h2>
 
-        {serverError && <p style={styles.error}>{serverError}</p>}
+        {serverError && <p className={styles.error}>{serverError}</p>}
 
-        <form onSubmit={handleSubmit(onSubmit)} style={styles.form}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <div>
             <input
               type="email"
               placeholder="Email"
               disabled={isSubmitting}
-              style={styles.input}
+              className={styles.input}
               {...register("email", {
                 required: "Email обязателен для заполнения",
                 pattern: {
@@ -65,7 +68,7 @@ const AuthPage = () => {
               })}
             />
             {errors.email && (
-              <span style={styles.fieldError}>{errors.email.message}</span>
+              <span className={styles.fieldError}>{errors.email.message}</span>
             )}
           </div>
 
@@ -74,7 +77,7 @@ const AuthPage = () => {
               type="password"
               placeholder="Пароль"
               disabled={isSubmitting}
-              style={styles.input}
+              className={styles.input}
               {...register("password", {
                 required: "Пароль обязателен для заполнения",
                 minLength: {
@@ -84,11 +87,17 @@ const AuthPage = () => {
               })}
             />
             {errors.password && (
-              <span style={styles.fieldError}>{errors.password.message}</span>
+              <span className={styles.fieldError}>
+                {errors.password.message}
+              </span>
             )}
           </div>
 
-          <button type="submit" disabled={isSubmitting} style={styles.button}>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={styles.button}
+          >
             {isSubmitting
               ? "Загрузка..."
               : isLogin
@@ -100,7 +109,7 @@ const AuthPage = () => {
         <button
           onClick={toggleMode}
           disabled={isSubmitting}
-          style={styles.toggleButton}
+          className={styles.toggleButton}
         >
           {isLogin
             ? "Еще нет аккаунта? Зарегистрироваться"
@@ -112,68 +121,3 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
-
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    backgroundColor: "#121212",
-    color: "#fff",
-    fontFamily: "sans-serif",
-  },
-  card: {
-    background: "#181818",
-    padding: "40px",
-    borderRadius: "8px",
-    width: "350px",
-    textAlign: "center" as const,
-    boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "15px",
-    marginTop: "20px",
-  },
-  input: {
-    width: "100%",
-    padding: "12px",
-    borderRadius: "4px",
-    border: "1px solid #333",
-    backgroundColor: "#282828",
-    color: "#fff",
-    fontSize: "14px",
-    boxSizing: "border-box" as const,
-  },
-  button: {
-    width: "100%",
-    padding: "12px",
-    borderRadius: "25px",
-    border: "none",
-    backgroundColor: "#1db954",
-    color: "#fff",
-    fontWeight: "bold" as const,
-    cursor: "pointer",
-    fontSize: "14px",
-    marginTop: "10px",
-  },
-  toggleButton: {
-    background: "none",
-    border: "none",
-    color: "#b3b3b3",
-    marginTop: "20px",
-    cursor: "pointer",
-    fontSize: "12px",
-  },
-  error: { color: "#e91429", fontSize: "14px", margin: "10px 0" },
-  fieldError: {
-    color: "#e91429",
-    fontSize: "12px",
-    display: "block",
-    textAlign: "left" as const,
-    marginTop: "5px",
-    paddingLeft: "5px",
-  },
-};

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePlayerStore } from "@/store";
+import styles from "./Player.module.css";
 
 const Player = () => {
   const {
@@ -30,20 +31,18 @@ const Player = () => {
   };
 
   return (
-    <div style={styles.playerBar}>
-      <div style={styles.trackInfo}>
-        <div style={styles.trackName}>{currentTrack.title}</div>
-        <div style={styles.trackArtist}>{currentTrack.artist}</div>
+    <div className={styles.playerBar}>
+      <div className={styles.trackInfo}>
+        <div className={styles.trackName}>{currentTrack.title}</div>
+        <div className={styles.trackArtist}>{currentTrack.artist}</div>
       </div>
 
-      {/* Управление воспроизведением */}
-      <div style={styles.controls}>
-        <button onClick={togglePlay} style={styles.playButton}>
+      <div className={styles.controls}>
+        <button onClick={togglePlay} className={styles.playButton}>
           {isPlaying ? "⏸" : "▶"}
         </button>
 
-        {/* Прогресс-бар трека */}
-        <div style={styles.progressContainer}>
+        <div className={styles.progressContainer}>
           <span>{formatTime(currentTime)}</span>
           <input
             type="range"
@@ -51,13 +50,13 @@ const Player = () => {
             max={duration || 0}
             value={currentTime}
             onChange={(e) => setCurrentTime(Number(e.target.value))}
-            style={styles.progressBar}
+            className={styles.progressBar}
           />
           <span>{formatTime(duration)}</span>
         </div>
       </div>
 
-      <div style={styles.volumeContainer}>
+      <div className={styles.volumeContainer}>
         <span>🔊</span>
         <input
           type="range"
@@ -66,7 +65,7 @@ const Player = () => {
           step={0.01}
           value={volume}
           onChange={(e) => setVolume(Number(e.target.value))}
-          style={styles.volumeBar}
+          className={styles.volumeBar}
         />
       </div>
     </div>
@@ -74,67 +73,3 @@ const Player = () => {
 };
 
 export default Player;
-
-const styles = {
-  playerBar: {
-    position: "fixed" as const,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: "90px",
-    backgroundColor: "#181818",
-    borderTop: "1px solid #282828",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "0 20px",
-    color: "#fff",
-    fontFamily: "sans-serif",
-    zIndex: 1000,
-  },
-  trackInfo: {
-    display: "flex",
-    flexDirection: "column" as const,
-    width: "30%",
-  },
-  trackName: { fontSize: "14px", fontWeight: "bold" },
-  trackArtist: { fontSize: "12px", color: "#b3b3b3", marginTop: "4px" },
-  controls: {
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    width: "40%",
-    gap: "8px",
-  },
-  playButton: {
-    backgroundColor: "#fff",
-    color: "#000",
-    border: "none",
-    borderRadius: "50%",
-    width: "40px",
-    height: "40px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "16px",
-    cursor: "pointer",
-    flexShrink: 0,
-  },
-  progressContainer: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    width: "100%",
-    fontSize: "12px",
-    color: "#b3b3b3",
-  },
-  progressBar: { flex: 1, accentColor: "#1db954", cursor: "pointer" },
-  volumeContainer: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    width: "30%",
-    justifyContent: "flex-end",
-  },
-  volumeBar: { accentColor: "#1db954", cursor: "pointer", width: "100px" },
-};

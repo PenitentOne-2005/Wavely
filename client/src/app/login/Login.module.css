@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #121212;
+  color: #fff;
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+.card {
+  background: #181818;
+  padding: 40px;
+  border-radius: 8px;
+  width: min(100%, 350px);
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background-color: #282828;
+  color: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #b3b3b3;
+  }
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  background-color: #1db954;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  color: #b3b3b3;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.error {
+  color: #e91429;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.fieldError {
+  color: #e91429;
+  font-size: 12px;
+  display: block;
+  text-align: left;
+  margin-top: 5px;
+  padding-left: 5px;
+}

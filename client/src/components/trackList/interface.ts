@@ -1,12 +1,4 @@
-interface Track {
-  id?: string | number;
-  jamendoId?: string;
-  title: string;
-  artist: string;
-  audioUrl: string;
-  cover?: string;
-  duration?: number;
-}
+import type { Track } from "@/app/interface";
 
 export interface TrackListProps {
   selectedPlaylist: any | null;
