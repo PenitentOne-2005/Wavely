@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import type { Track } from "./interface";
-import { api } from "@/api";
+import { apiService } from "@/services";
 import { usePlayerStore } from "@/store";
 import { Header, PlaylistList, TrackList } from "@/components";
 import { Loader } from "@/ui";
@@ -42,8 +42,8 @@ const Home = () => {
       return;
     }
 
-    api
-      .get("/playlists")
+    apiService
+      .getPlaylists()
       .then((res) => {
         setPlaylists(res.data);
         setLoading(false);
@@ -55,8 +55,8 @@ const Home = () => {
         }
       });
 
-    api
-      .get("/jamendo/popular")
+    apiService
+      .getPopularTracks()
       .then((res) => {
         setTracks(res.data);
       })
@@ -71,7 +71,8 @@ const Home = () => {
 
     setSearchLoading(true);
     try {
-      const response = await api.get(`/jamendo/search?q=${searchQuery}`);
+      const response = await apiService.searchTracks(searchQuery);
+
       setTracks(response.data);
     } catch (err) {
       console.error("Ошибка при поиске треков:", err);
@@ -84,7 +85,8 @@ const Home = () => {
     setPlaylistLoading(true);
     setSelectedPlaylist(playlist);
     try {
-      const response = await api.get(`/playlists/${playlist.id}`);
+      const response = await apiService.getPlaylistById(playlist.id);
+
       setPlaylistTracks(response.data.tracks || []);
     } catch (err) {
       console.error("Ошибка при загрузке треков плейлиста:", err);
@@ -101,7 +103,8 @@ const Home = () => {
     if (!newPlaylistName.trim()) return;
 
     try {
-      const response = await api.post("/playlists", { title: newPlaylistName });
+      const response = await apiService.createPlaylist(newPlaylistName);
+
       setPlaylists((prev) => [...prev, response.data]);
       setNewPlaylistName("");
       setIsCreating(false);
@@ -110,6 +113,7 @@ const Home = () => {
         "Ошибка при создании плейлиста:",
         err.response?.data || err,
       );
+
       const serverMessage =
         err.response?.data?.message || "Не удалось создать плейлист.";
       alert(
@@ -120,14 +124,8 @@ const Home = () => {
 
   const handleAddTrackToPlaylist = async (playlistId: number, track: Track) => {
     try {
-      await api.post(`/playlists/${playlistId}/tracks`, {
-        jamendoId: track.jamendoId || String(track.id || ""),
-        title: track.title,
-        artist: track.artist,
-        audioUrl: track.audioUrl,
-        cover: track.cover || "",
-        duration: track.duration || 0,
-      });
+      await apiService.addTrackToPlaylist(playlistId, track);
+
       alert("Трек успешно добавлен в плейлист!");
     } catch (err: any) {
       console.error("Ошибка при добавлении трека:", err.response?.data || err);
@@ -140,10 +138,12 @@ const Home = () => {
     jamendoId: string,
   ) => {
     try {
-      await api.delete(`/playlists/${playlistId}/tracks/${jamendoId}`);
+      await apiService.removeTrackFromPlaylist(playlistId, jamendoId);
+
       setPlaylistTracks((prev) =>
         prev.filter((t) => t.jamendoId !== jamendoId),
       );
+
       alert("Трек удален из плейлиста");
     } catch (err) {
       console.error("Ошибка при удалении трека:", err);
