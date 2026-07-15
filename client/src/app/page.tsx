@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import Cookies from "js-cookie";
 import type { Track } from "./interface";
 import { apiService } from "@/services";
 import { usePlayerStore } from "@/store";
+import { homeReducer, initialState } from "./hooks";
 import { Header, PlaylistList, TrackList } from "@/components";
 import { Loader } from "@/ui";
 import styles from "./page.module.css";
@@ -13,19 +14,20 @@ import styles from "./page.module.css";
 const Home = () => {
   const router = useRouter();
 
-  // Состояния плейлистов
-  const [playlists, setPlaylists] = useState<any[]>([]);
-  const [selectedPlaylist, setSelectedPlaylist] = useState<any | null>(null);
-  const [playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [playlistLoading, setPlaylistLoading] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
-  const [newPlaylistName, setNewPlaylistName] = useState("");
+  const [state, dispatch] = useReducer(homeReducer, initialState);
 
-  // Состояния треков и поиска
-  const [searchQuery, setSearchQuery] = useState("");
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [searchLoading, setSearchLoading] = useState(false);
+  const {
+    playlists,
+    selectedPlaylist,
+    playlistTracks,
+    loading,
+    playlistLoading,
+    isCreating,
+    newPlaylistName,
+    searchQuery,
+    tracks,
+    searchLoading,
+  } = state;
 
   const setQueue = usePlayerStore((state) => state.setQueue);
   const displayTracks = selectedPlaylist ? playlistTracks : tracks;
@@ -45,8 +47,8 @@ const Home = () => {
     apiService
       .getPlaylists()
       .then((res) => {
-        setPlaylists(res.data);
-        setLoading(false);
+        dispatch({ type: "SET_PLAYLISTS", payload: res.data });
+        dispatch({ type: "SET_LOADING", payload: false });
       })
       .catch((err) => {
         if (err.response?.status === 401) {
@@ -58,7 +60,7 @@ const Home = () => {
     apiService
       .getPopularTracks()
       .then((res) => {
-        setTracks(res.data);
+        dispatch({ type: "SET_SEARCH_RESULTS", payload: res.data });
       })
       .catch((err) => {
         console.error("Ошибка загрузки популярных треков:", err);
@@ -69,30 +71,32 @@ const Home = () => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
 
-    setSearchLoading(true);
+    dispatch({ type: "START_SEARCH" });
+
     try {
       const response = await apiService.searchTracks(searchQuery);
 
-      setTracks(response.data);
+      dispatch({ type: "SET_SEARCH_RESULTS", payload: response.data });
     } catch (err) {
       console.error("Ошибка при поиске треков:", err);
-    } finally {
-      setSearchLoading(false);
+      dispatch({ type: "SET_SEARCH_RESULTS", payload: [] });
     }
   };
 
   const handleSelectPlaylist = async (playlist: any) => {
-    setPlaylistLoading(true);
-    setSelectedPlaylist(playlist);
+    dispatch({ type: "START_PLAYLIST_LOADING", payload: playlist });
+
     try {
       const response = await apiService.getPlaylistById(playlist.id);
 
-      setPlaylistTracks(response.data.tracks || []);
+      dispatch({
+        type: "SET_PLAYLIST_TRACKS",
+        payload: response.data.tracks || [],
+      });
     } catch (err) {
       console.error("Ошибка при загрузке треков плейлиста:", err);
       alert("Не удалось загрузить треки плейлиста.");
-    } finally {
-      setPlaylistLoading(false);
+      dispatch({ type: "SET_PLAYLIST_TRACKS", payload: [] });
     }
   };
 
@@ -105,15 +109,12 @@ const Home = () => {
     try {
       const response = await apiService.createPlaylist(newPlaylistName);
 
-      setPlaylists((prev) => [...prev, response.data]);
-      setNewPlaylistName("");
-      setIsCreating(false);
+      dispatch({ type: "ADD_PLAYLIST", payload: response.data });
     } catch (err: any) {
       console.error(
         "Ошибка при создании плейлиста:",
         err.response?.data || err,
       );
-
       const serverMessage =
         err.response?.data?.message || "Не удалось создать плейлист.";
       alert(
@@ -140,10 +141,7 @@ const Home = () => {
     try {
       await apiService.removeTrackFromPlaylist(playlistId, jamendoId);
 
-      setPlaylistTracks((prev) =>
-        prev.filter((t) => t.jamendoId !== jamendoId),
-      );
-
+      dispatch({ type: "REMOVE_TRACK_FROM_PLAYLIST", payload: jamendoId });
       alert("Трек удален из плейлиста");
     } catch (err) {
       console.error("Ошибка при удалении трека:", err);
@@ -157,28 +155,28 @@ const Home = () => {
 
   return (
     <main className={styles.main}>
-      {/* 1. Компонент шапки */}
       <Header
         searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        setSearchQuery={(query) =>
+          dispatch({ type: "SET_SEARCH_QUERY", payload: query })
+        }
         onSearch={handleSearch}
       />
 
-      {/* Основной контент */}
       <div className={styles.content}>
-        {/* 2. Компонент списка плейлистов */}
         <PlaylistList
           playlists={playlists}
           selectedPlaylist={selectedPlaylist}
           onSelectPlaylist={handleSelectPlaylist}
           isCreating={isCreating}
-          setIsCreating={setIsCreating}
+          setIsCreating={() => dispatch({ type: "TOGGLE_CREATING" })}
           newPlaylistName={newPlaylistName}
-          setNewPlaylistName={setNewPlaylistName}
+          setNewPlaylistName={(name) =>
+            dispatch({ type: "SET_NEW_PLAYLIST_NAME", payload: name })
+          }
           onCreatePlaylist={handleCreatePlaylist}
         />
 
-        {/* 3. Компонент списка треков */}
         <TrackList
           selectedPlaylist={selectedPlaylist}
           searchQuery={searchQuery}
@@ -186,16 +184,13 @@ const Home = () => {
           playlistLoading={playlistLoading}
           displayTracks={displayTracks}
           playlists={playlists}
-          onBackToPopular={() => {
-            setSelectedPlaylist(null);
-            setPlaylistTracks([]);
-          }}
+          onBackToPopular={() => dispatch({ type: "CLEAR_SELECTED_PLAYLIST" })}
           onAddTrackToPlaylist={handleAddTrackToPlaylist}
           onRemoveTrackFromPlaylist={handleRemoveTrackFromPlaylist}
         />
       </div>
     </main>
   );
-};
+}
 
 export default Home;
