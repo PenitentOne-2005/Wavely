@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import type { AuthDto } from "./interface";
 import { api } from "@/api";
+import { Input } from "@/components";
 import styles from "./Login.module.css";
 
 const AuthPage = () => {
@@ -53,45 +54,33 @@ const AuthPage = () => {
         {serverError && <p className={styles.error}>{serverError}</p>}
 
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              disabled={isSubmitting}
-              className={styles.input}
-              {...register("email", {
-                required: "Email обязателен для заполнения",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Некорректный формат email",
-                },
-              })}
-            />
-            {errors.email && (
-              <span className={styles.fieldError}>{errors.email.message}</span>
-            )}
-          </div>
+          <Input
+            type="email"
+            placeholder="Email"
+            disabled={isSubmitting}
+            error={errors.email?.message}
+            {...register("email", {
+              required: "Email обязателен для заполнения",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Некорректный формат email",
+              },
+            })}
+          />
 
-          <div>
-            <input
-              type="password"
-              placeholder="Пароль"
-              disabled={isSubmitting}
-              className={styles.input}
-              {...register("password", {
-                required: "Пароль обязателен для заполнения",
-                minLength: {
-                  value: 8,
-                  message: "Пароль должен быть не менее 8 символов",
-                },
-              })}
-            />
-            {errors.password && (
-              <span className={styles.fieldError}>
-                {errors.password.message}
-              </span>
-            )}
-          </div>
+          <Input
+            type="password"
+            placeholder="Пароль"
+            disabled={isSubmitting}
+            error={errors.password?.message}
+            {...register("password", {
+              required: "Пароль обязателен для заполнения",
+              minLength: {
+                value: 8,
+                message: "Пароль должен быть не менее 8 символов",
+              },
+            })}
+          />
 
           <button
             type="submit"

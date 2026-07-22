@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePlayerStore } from "@/store";
+import { Input } from "../index";
 import styles from "./Player.module.css";
 
 const Player = () => {
@@ -44,7 +45,7 @@ const Player = () => {
 
         <div className={styles.progressContainer}>
           <span>{formatTime(currentTime)}</span>
-          <input
+          <Input
             type="range"
             min={0}
             max={duration || 0}
@@ -58,7 +59,7 @@ const Player = () => {
 
       <div className={styles.volumeContainer}>
         <span>🔊</span>
-        <input
+        <Input
           type="range"
           min={0}
           max={1}

@@ -1,6 +1,7 @@
 "use client";
 
 import type { PlaylistListProps } from "./interface";
+import { Input } from "../index";
 import styles from "./Playlist.module.css";
 
 const PlaylistList = ({
@@ -25,10 +26,9 @@ const PlaylistList = ({
         </button>
       </div>
 
-      {/* Форма создания нового плейлиста */}
       {isCreating && (
         <form onSubmit={onCreatePlaylist} className={styles.createForm}>
-          <input
+          <Input
             type="text"
             placeholder="Название плейлиста"
             value={newPlaylistName}

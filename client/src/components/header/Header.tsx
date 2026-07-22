@@ -1,6 +1,7 @@
 "use client";
 
 import type { HeaderProps } from "./interface";
+import { Input } from "../index";
 import styles from "./Header.module.css";
 
 const Header = ({ searchQuery, setSearchQuery, onSearch }: HeaderProps) => {
@@ -9,7 +10,7 @@ const Header = ({ searchQuery, setSearchQuery, onSearch }: HeaderProps) => {
       <h1 className={styles.title}>Мой Музыкальный Сервис</h1>
 
       <form onSubmit={onSearch} className={styles.form}>
-        <input
+        <Input
           type="text"
           placeholder="Что хотите послушать?"
           value={searchQuery}
