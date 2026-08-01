@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer } from "react";
 import Cookies from "js-cookie";
-import type { Track } from "./interface";
-import { apiService } from "@/services";
+import type { Track, Playlist } from "./interface";
+import { playlistService, trackService } from "@/services";
 import { usePlayerStore } from "@/store";
 import { homeReducer, initialState } from "./hooks";
 import { Header, PlaylistList, TrackList } from "@/components";
@@ -44,59 +44,81 @@ const Home = () => {
       return;
     }
 
-    apiService
-      .getPlaylists()
-      .then((res) => {
-        dispatch({ type: "SET_PLAYLISTS", payload: res.data });
-        dispatch({ type: "SET_LOADING", payload: false });
-      })
-      .catch((err) => {
-        if (err.response?.status === 401) {
-          Cookies.remove("token");
-          router.push("/login");
-        }
-      });
+    const loadData = async () => {
+      try {
+        const [playlists, popularTracks] = await Promise.all([
+          playlistService.getAll(),
+          trackService.getPopular(),
+        ]);
 
-    apiService
-      .getPopularTracks()
-      .then((res) => {
-        dispatch({ type: "SET_SEARCH_RESULTS", payload: res.data });
-      })
-      .catch((err) => {
-        console.error("Ошибка загрузки популярных треков:", err);
-      });
+        dispatch({
+          type: "SET_PLAYLISTS",
+          payload: playlists,
+        });
+
+        dispatch({
+          type: "SET_SEARCH_RESULTS",
+          payload: popularTracks,
+        });
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+      } finally {
+        dispatch({
+          type: "SET_LOADING",
+          payload: false,
+        });
+      }
+    };
+
+    loadData();
   }, [router]);
 
   const handleSearch = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (!searchQuery.trim()) return;
 
     dispatch({ type: "START_SEARCH" });
 
     try {
-      const response = await apiService.searchTracks(searchQuery);
+      const tracks = await trackService.search(searchQuery);
 
-      dispatch({ type: "SET_SEARCH_RESULTS", payload: response.data });
-    } catch (err) {
-      console.error("Ошибка при поиске треков:", err);
-      dispatch({ type: "SET_SEARCH_RESULTS", payload: [] });
+      dispatch({
+        type: "SET_SEARCH_RESULTS",
+        payload: tracks,
+      });
+    } catch (error) {
+      console.error("Ошибка при поиске треков:", error);
+
+      dispatch({
+        type: "SET_SEARCH_RESULTS",
+        payload: [],
+      });
     }
   };
 
-  const handleSelectPlaylist = async (playlist: any) => {
-    dispatch({ type: "START_PLAYLIST_LOADING", payload: playlist });
+  const handleSelectPlaylist = async (playlist: Playlist) => {
+    dispatch({
+      type: "START_PLAYLIST_LOADING",
+      payload: playlist,
+    });
 
     try {
-      const response = await apiService.getPlaylistById(playlist.id);
+      const selectedPlaylist = await playlistService.getById(playlist.id);
 
       dispatch({
         type: "SET_PLAYLIST_TRACKS",
-        payload: response.data.tracks || [],
+        payload: selectedPlaylist.tracks ?? [],
       });
-    } catch (err) {
-      console.error("Ошибка при загрузке треков плейлиста:", err);
-      alert("Не удалось загрузить треки плейлиста.");
-      dispatch({ type: "SET_PLAYLIST_TRACKS", payload: [] });
+    } catch (error) {
+      console.error("Ошибка при загрузке плейлиста:", error);
+
+      dispatch({
+        type: "SET_PLAYLIST_TRACKS",
+        payload: [],
+      });
+
+      alert("Не удалось загрузить плейлист.");
     }
   };
 
@@ -104,33 +126,32 @@ const Home = () => {
     e: React.SyntheticEvent<HTMLFormElement>,
   ) => {
     e.preventDefault();
+
     if (!newPlaylistName.trim()) return;
 
     try {
-      const response = await apiService.createPlaylist(newPlaylistName);
+      const playlist = await playlistService.create(newPlaylistName);
 
-      dispatch({ type: "ADD_PLAYLIST", payload: response.data });
-    } catch (err: any) {
-      console.error(
-        "Ошибка при создании плейлиста:",
-        err.response?.data || err,
-      );
-      const serverMessage =
-        err.response?.data?.message || "Не удалось создать плейлист.";
-      alert(
-        Array.isArray(serverMessage) ? serverMessage.join(", ") : serverMessage,
-      );
+      dispatch({
+        type: "ADD_PLAYLIST",
+        payload: playlist,
+      });
+    } catch (error) {
+      console.error("Ошибка при создании плейлиста:", error);
+
+      alert("Не удалось создать плейлист.");
     }
   };
 
   const handleAddTrackToPlaylist = async (playlistId: number, track: Track) => {
     try {
-      await apiService.addTrackToPlaylist(playlistId, track);
+      await playlistService.addTrack(playlistId, track);
 
       alert("Трек успешно добавлен в плейлист!");
-    } catch (err: any) {
-      console.error("Ошибка при добавлении трека:", err.response?.data || err);
-      alert("Не удалось добавить трек в плейлист.");
+    } catch (error) {
+      console.error("Ошибка при добавлении трека:", error);
+
+      alert("Не удалось добавить трек.");
     }
   };
 
@@ -139,13 +160,18 @@ const Home = () => {
     jamendoId: string,
   ) => {
     try {
-      await apiService.removeTrackFromPlaylist(playlistId, jamendoId);
+      await playlistService.removeTrack(playlistId, jamendoId);
 
-      dispatch({ type: "REMOVE_TRACK_FROM_PLAYLIST", payload: jamendoId });
-      alert("Трек удален из плейлиста");
-    } catch (err) {
-      console.error("Ошибка при удалении трека:", err);
-      alert("Не удалось удалить трек из плейлиста.");
+      dispatch({
+        type: "REMOVE_TRACK_FROM_PLAYLIST",
+        payload: jamendoId,
+      });
+
+      alert("Трек удалён из плейлиста.");
+    } catch (error) {
+      console.error("Ошибка при удалении трека:", error);
+
+      alert("Не удалось удалить трек.");
     }
   };
 

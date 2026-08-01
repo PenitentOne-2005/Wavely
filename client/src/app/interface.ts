@@ -8,3 +8,9 @@ export interface Track {
   jamendoId?: string;
   createdAt?: string;
 }
+
+export interface Playlist {
+  id: string;
+  title: string;
+  tracks: Track[];
+}
