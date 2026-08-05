@@ -19,7 +19,7 @@ export class JamendoService {
   }
 
   async getPopular(limit = 20) {
-    const url = `${this.baseUrl}/tracks?client_id=${this.clientId}&format=json&limit=${limit}&order=popularity_total&audioformat=mp32`;
+    const url = `${this.baseUrl}/tracks?client_id=${this.clientId}&format=json&limit=${limit}&order=popularity_week&audioformat=mp32`;
     const res = await fetch(url);
     const data = await res.json();
 
