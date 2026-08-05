@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -12,26 +12,39 @@ export class JamendoService {
 
   async search(query: string, limit = 20) {
     const url = `${this.baseUrl}/tracks?client_id=${this.clientId}&format=json&limit=${limit}&search=${encodeURIComponent(query)}&include=musicinfo&audioformat=mp32`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    return this.formatTracks(data.results);
+    return this.fetchTracks(url);
   }
 
   async getPopular(limit = 20) {
     const url = `${this.baseUrl}/tracks?client_id=${this.clientId}&format=json&limit=${limit}&order=popularity_week&audioformat=mp32`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    return this.formatTracks(data.results);
+    return this.fetchTracks(url);
   }
 
   async getByGenre(genre: string, limit = 20) {
-    const url = `${this.baseUrl}/tracks?client_id=${this.clientId}&format=json&limit=${limit}&tags=${genre}&audioformat=mp32`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const url = `${this.baseUrl}/tracks?client_id=${this.clientId}&format=json&limit=${limit}&tags=${encodeURIComponent(genre)}&audioformat=mp32`;
+    return this.fetchTracks(url);
+  }
 
-    return this.formatTracks(data.results);
+  private async fetchTracks(url: string) {
+    try {
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new BadGatewayException(`Jamendo API error: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      if (!data?.results || !Array.isArray(data.results)) {
+        return [];
+      }
+
+      return this.formatTracks(data.results);
+    } catch (error) {
+      if (error instanceof BadGatewayException) throw error;
+
+      throw new BadGatewayException('Failed to fetch data from Jamendo API');
+    }
   }
 
   private formatTracks(tracks: any[]) {
