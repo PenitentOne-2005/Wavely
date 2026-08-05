@@ -1,0 +1,129 @@
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #181818;
+  border-radius: 8px;
+  border: 1px solid #282828;
+}
+
+.cardActive {
+  border-color: #1db954;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.titleActive {
+  color: #1db954;
+}
+
+.artist {
+  font-size: 14px;
+  color: #b3b3b3;
+  margin-top: 4px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.playButton {
+  background-color: #282828;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.playButtonActive {
+  background-color: #1db954;
+}
+
+.removeButton {
+  background-color: transparent;
+  color: #e91429;
+  border: 1px solid #e91429;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #e91429;
+    color: #fff;
+  }
+}
+
+.addButton {
+  background-color: #282828;
+  color: #fff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background-color: #282828;
+  border: 1px solid #3e3e3e;
+  border-radius: 6px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  min-width: 180px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.menuHeader {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #b3b3b3;
+  border-bottom: 1px solid #3e3e3e;
+  font-weight: bold;
+}
+
+.emptyMenu {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #b3b3b3;
+}
+
+.menuItem {
+  width: 100%;
+  text-align: left;
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #3e3e3e;
+  }
+}
