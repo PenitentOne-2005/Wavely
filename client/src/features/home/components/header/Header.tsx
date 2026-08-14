@@ -7,7 +7,7 @@ import styles from "./Header.module.css";
 const Header = ({ searchQuery, setSearchQuery, onSearch }: HeaderProps) => {
   return (
     <header className={styles.header}>
-      <h1 className={styles.title}>Мой Музыкальный Сервис</h1>
+      <h1 className={styles.title}>Wavely</h1>
 
       <form onSubmit={onSearch} className={styles.form}>
         <Input

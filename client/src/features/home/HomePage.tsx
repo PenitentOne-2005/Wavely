@@ -108,7 +108,7 @@ const HomePage = () => {
 
       dispatch({
         type: "SET_PLAYLIST_TRACKS",
-        payload: selectedPlaylist.tracks ?? [],
+        payload: selectedPlaylist?.tracks ?? [],
       });
     } catch (error) {
       console.error("Ошибка при загрузке плейлиста:", error);
