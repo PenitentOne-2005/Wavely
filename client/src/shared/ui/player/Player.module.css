@@ -3,15 +3,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 90px;
+  height: 5.625rem;
   background-color: #181818;
   border-top: 1px solid #282828;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 1.25rem;
   color: #fff;
   font-family: sans-serif;
+  font-size: 1rem;
   z-index: 1000;
 }
 
@@ -22,14 +23,16 @@
 }
 
 .trackName {
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: bold;
+  line-height: 1.4;
 }
 
 .trackArtist {
-  font-size: 12px;
+  font-size: 0.875rem;
   color: #b3b3b3;
-  margin-top: 4px;
+  margin-top: 0.25rem;
+  line-height: 1.4;
 }
 
 .controls {
@@ -37,7 +40,7 @@
   flex-direction: column;
   align-items: center;
   width: 40%;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .playButton {
@@ -45,22 +48,27 @@
   color: #000;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 1rem;
   cursor: pointer;
   flex-shrink: 0;
+  outline: none;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.6);
+  }
 }
 
 .progressContainer {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   width: 100%;
-  font-size: 12px;
+  font-size: 0.875rem;
   color: #b3b3b3;
 }
 
@@ -68,12 +76,19 @@
   flex: 1;
   accent-color: #1db954;
   cursor: pointer;
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid #1db954;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 }
 
 .volumeContainer {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   width: 30%;
   justify-content: flex-end;
 }
@@ -81,5 +96,12 @@
 .volumeBar {
   accent-color: #1db954;
   cursor: pointer;
-  width: 100px;
+  width: 6.25rem;
+  outline: none;
+
+  &:focus-visible {
+    outline: 2px solid #1db954;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
 }

@@ -26,41 +26,50 @@ const Player = () => {
   if (!currentTrack) return null;
 
   return (
-    <div className={styles.playerBar}>
-      <div className={styles.trackInfo}>
-        <div className={styles.trackName}>{currentTrack.title}</div>
-        <div className={styles.trackArtist}>{currentTrack.artist}</div>
+    <div className={styles.playerBar} role="region" aria-label="Аудиоплеер">
+      <div className={styles.trackInfo} aria-live="polite" aria-atomic="true">
+        <h2 className={styles.trackName}>{currentTrack.title}</h2>
+        <p className={styles.trackArtist}>{currentTrack.artist}</p>
       </div>
 
       <div className={styles.controls}>
-        <button onClick={togglePlay} className={styles.playButton}>
+        <button
+          onClick={togglePlay}
+          className={styles.playButton}
+          aria-label={isPlaying ? "Пауза" : "Воспроизвести"}
+          aria-pressed={isPlaying}
+        >
           {isPlaying ? "⏸" : "▶"}
         </button>
 
         <div className={styles.progressContainer}>
-          <span>{formatTime(currentTime)}</span>
+          <span aria-hidden="true">{formatTime(currentTime)}</span>
           <Input
             type="range"
+            label="Перемотка трека"
             min={0}
             max={duration || 0}
             value={currentTime}
             onChange={(e) => setCurrentTime(Number(e.target.value))}
             className={styles.progressBar}
+            aria-valuetext={`${formatTime(currentTime)} из ${formatTime(duration)}`}
           />
-          <span>{formatTime(duration)}</span>
+          <span aria-hidden="true">{formatTime(duration)}</span>
         </div>
       </div>
 
       <div className={styles.volumeContainer}>
-        <span>🔊</span>
+        <span aria-hidden="true">🔊</span>
         <Input
           type="range"
+          label="Громкость"
           min={0}
           max={1}
           step={0.01}
           value={volume}
           onChange={(e) => setVolume(Number(e.target.value))}
           className={styles.volumeBar}
+          aria-valuetext={`${Math.round(volume * 100)}%`}
         />
       </div>
     </div>

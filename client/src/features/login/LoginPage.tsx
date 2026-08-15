@@ -47,16 +47,27 @@ const AuthPage = () => {
   return (
     <main className={styles.container}>
       <div className={styles.card}>
-        <h2 className={styles.title}>
+        <h2 id="auth-title" className={styles.title}>
           {isLogin ? "Войти в аккаунт" : "Регистрация"}
         </h2>
 
-        {serverError && <p className={styles.error}>{serverError}</p>}
+        {serverError && (
+          <p className={styles.error} role="alert" aria-live="assertive">
+            {serverError}
+          </p>
+        )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={styles.form}
+          aria-labelledby="auth-title"
+          noValidate
+        >
           <Input
             type="email"
+            label="Email"
             placeholder="Email"
+            autoComplete="email"
             disabled={isSubmitting}
             error={errors.email?.message}
             {...register("email", {
@@ -70,7 +81,9 @@ const AuthPage = () => {
 
           <Input
             type="password"
+            label="Пароль"
             placeholder="Пароль"
+            autoComplete={isLogin ? "current-password" : "new-password"}
             disabled={isSubmitting}
             error={errors.password?.message}
             {...register("password", {
@@ -85,6 +98,7 @@ const AuthPage = () => {
           <button
             type="submit"
             disabled={isSubmitting}
+            aria-busy={isSubmitting}
             className={styles.button}
           >
             {isSubmitting
@@ -96,6 +110,7 @@ const AuthPage = () => {
         </form>
 
         <button
+          type="button"
           onClick={toggleMode}
           disabled={isSubmitting}
           className={styles.toggleButton}

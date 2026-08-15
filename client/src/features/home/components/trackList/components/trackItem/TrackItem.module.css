@@ -2,9 +2,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 1rem;
   background-color: #181818;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   border: 1px solid #282828;
 }
 
@@ -13,9 +13,10 @@
 }
 
 .title {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
   color: #fff;
+  line-height: 1.4;
 }
 
 .titleActive {
@@ -23,46 +24,46 @@
 }
 
 .artist {
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #b3b3b3;
-  margin-top: 4px;
+  margin-top: 0.25rem;
+  line-height: 1.4;
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   position: relative;
 }
 
 .playButton {
-  background-color: #282828;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-}
+  padding: 0.5rem 1rem;
+  border-radius: 1.25rem;
 
-.playButtonActive {
-  background-color: #1db954;
+  &:hover {
+    background-color: #166532;
+  }
+
+  &[aria-pressed="true"] {
+    background-color: #1db954;
+  }
 }
 
 .removeButton {
   background-color: transparent;
   color: #e91429;
   border: 1px solid #e91429;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   cursor: pointer;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 0.875rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 
   &:hover {
     background-color: #e91429;
@@ -71,59 +72,89 @@
 }
 
 .addButton {
-  background-color: #282828;
-  color: #fff;
-  border: none;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:hover {
+    background-color: #1db954;
+  }
 }
 
 .menu {
-  position: absolute;
-  top: 45px;
-  right: 0;
   background-color: #282828;
   border: 1px solid #3e3e3e;
-  border-radius: 6px;
+  border-radius: 0.375rem;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
-  z-index: 10;
-  min-width: 180px;
-  max-height: 200px;
+  z-index: 1000;
+  min-width: 11.25rem;
+  max-height: 12.5rem;
   overflow-y: auto;
+
+  & .menuIcon:not(:last-child) {
+    margin-right: 0.5rem;
+  }
 }
 
 .menuHeader {
-  padding: 8px 12px;
-  font-size: 12px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
   color: #b3b3b3;
   border-bottom: 1px solid #3e3e3e;
   font-weight: bold;
 }
 
 .emptyMenu {
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
   color: #b3b3b3;
 }
 
 .menuItem {
-  width: 100%;
+  width: 90%;
   text-align: left;
   background-color: transparent;
   color: #fff;
   border: none;
-  padding: 10px 12px;
   cursor: pointer;
-  font-size: 14px;
+  border-radius: 0.25rem;
+  margin: 5px;
+  font-size: 0.875rem;
+  outline: none;
+
+  transition: background-color 0.3s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
   &:hover {
-    background-color: #3e3e3e;
+    background-color: #181818;
+  }
+
+  &:focus-visible {
+    border-color: #1db954;
+    box-shadow: 0 0 0 3px rgb(16, 126, 54);
+  }
+}
+
+:is(.playButton, .addButton) {
+  background-color: #282828;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  outline: none;
+  transition: background-color 0.3s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:focus-visible {
+    border-color: #1db954;
+    box-shadow: 0 0 0 3px rgb(16, 126, 54);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playButton, .addButton, .removeButton, .menuItem {
+    transition: none;
   }
 }

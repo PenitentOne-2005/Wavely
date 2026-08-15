@@ -1,11 +1,13 @@
 .main {
-  padding: 20px;
+  padding: 1.25rem;
   color: #fff;
   background-color: #121212;
-  height: 100vh;
+  min-height: 100vh;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .content {
   display: flex;
-  gap: 40px;
+  gap: 2.5rem;
 }

@@ -12,10 +12,10 @@ const Header = ({ searchQuery, setSearchQuery, onSearch }: HeaderProps) => {
       <form onSubmit={onSearch} className={styles.form}>
         <Input
           type="text"
+          label="Что хотите послушать?"
           placeholder="Что хотите послушать?"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className={styles.input}
         />
         <button type="submit" className={styles.button}>
           Найти

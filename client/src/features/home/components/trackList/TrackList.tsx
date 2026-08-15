@@ -15,26 +15,34 @@ const TrackList = ({
   onAddTrackToPlaylist,
   onRemoveTrackFromPlaylist,
 }: TrackListProps) => {
+  const headingText = selectedPlaylist
+    ? `Плейлист: ${selectedPlaylist.title}`
+    : searchQuery
+      ? "Результаты поиска"
+      : "Популярные треки";
+
   return (
-    <div className={styles.container}>
+    <section className={styles.container} aria-labelledby="tracklist-heading">
       <div className={styles.header}>
-        <h3 className={styles.title}>
-          {selectedPlaylist
-            ? `Плейлист: ${selectedPlaylist.title}`
-            : searchQuery
-              ? "Результаты поиска"
-              : "Популярные треки"}
+        <h3 id="tracklist-heading" className={styles.title}>
+          {headingText}
         </h3>
 
         {selectedPlaylist && (
-          <button onClick={onBackToPopular} className={styles.backButton}>
+          <button
+            type="button"
+            onClick={onBackToPopular}
+            className={styles.backButton}
+          >
             ← К популярным
           </button>
         )}
       </div>
 
       {searchLoading || playlistLoading ? (
-        <p className={styles.loading}>Загрузка треков...</p>
+        <p className={styles.loading} role="status" aria-live="polite">
+          Загрузка треков...
+        </p>
       ) : displayTracks.length === 0 ? (
         <p className={styles.emptyState}>
           {selectedPlaylist
@@ -44,24 +52,29 @@ const TrackList = ({
               : "Популярные треки временно недоступны. Попробуйте воспользоваться поиском."}
         </p>
       ) : (
-        <div className={styles.list}>
+        <ul className={styles.list}>
           {displayTracks.map((track, index) => {
             const trackKey = track.id || track.jamendoId || `track-${index}`;
 
             return (
-              <TrackItem
+              <li
                 key={trackKey}
-                track={track}
-                selectedPlaylist={selectedPlaylist}
-                playlists={playlists}
-                onAddTrackToPlaylist={onAddTrackToPlaylist}
-                onRemoveTrackFromPlaylist={onRemoveTrackFromPlaylist}
-              />
+                className={styles.trackItemWrapper}
+                style={{ animationDelay: `${index * 40}ms` }}
+              >
+                <TrackItem
+                  track={track}
+                  selectedPlaylist={selectedPlaylist}
+                  playlists={playlists}
+                  onAddTrackToPlaylist={onAddTrackToPlaylist}
+                  onRemoveTrackFromPlaylist={onRemoveTrackFromPlaylist}
+                />
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
-    </div>
+    </section>
   );
 };
 

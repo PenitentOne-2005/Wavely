@@ -1,20 +1,24 @@
 .container {
   flex: 1;
   background-color: #121212;
-  padding: 20px;
-  border-radius: 8px;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .title {
   margin: 0;
   color: #fff;
+  font-size: 1.125rem;
+  line-height: 1.3;
 }
 
 .toggleButton {
@@ -22,43 +26,58 @@
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   cursor: pointer;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1.125rem;
   display: flex;
   align-items: center;
   justify-content: center;
-}
+  outline: none;
 
-.toggleButtonActive {
-  background-color: #e91429;
+  transition: background-color 0.3s ease-in-out, box-shadow 0.2s ease-in-out, opacity 0.3s ease-in-out;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px #121212, 0 0 0 3px #ffffff;
+  }
+
+  &[aria-expanded="true"] {
+    background-color: #e91429;
+  }
 }
 
 .createForm {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.input {
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid #333;
-  background-color: #1f1f1f;
-  color: #fff;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
 }
 
 .createButton {
-  padding: 8px;
-  border-radius: 4px;
+  padding: 0.5rem;
+  border-radius: 1.25rem;
   border: none;
-  background-color: #fff;
-  color: #000;
+  background-color: #1db954;
+  color: #fff;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
+  outline: none;
+
+  transition: background-color 0.3s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #166532;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px #121212, 0 0 0 3px #ffffff;
+  }
 }
 
 .emptyState {
@@ -71,22 +90,67 @@
   margin: 0;
 }
 
+.listItem {
+  margin: 0;
+  padding: 0;
+}
+
 .item {
-  padding: 10px 12px;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
   color: #fff;
-  background-color: #181818;
-  border-radius: 4px;
-  margin-bottom: 8px;
+  background-color: #282828;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
   cursor: pointer;
-  transition: background 0.2s;
-  font-weight: normal;
+  font-size: 1rem;
+  text-align: left;
+  border: none;
+  font-family: inherit;
+  outline: none;
+
+  transition: background-color 0.3s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  opacity: 0;
+  animation: fadeInUp 0.35s ease forwards;
 
   &:hover {
-    background-color: #282828;
+    background-color: #181818;
+  }
+
+  &:focus-visible {
+    border-color: #1db954;
+    box-shadow: 0 0 0 3px rgb(16, 126, 54);
+  }
+
+  &[aria-pressed="true"] {
+    background-color: #022e11;
+    font-weight: bold;
+  }
+
+  & .icon:not(:last-child) {
+    margin-right: 0.5rem;
   }
 }
 
-.selectedItem {
-  background-color: #1db954;
-  font-weight: bold;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    opacity: 1;
+    animation: none;
+  }
+
+  .createButton, .toggleButton, .item {
+    transition: none;
+  }
 }
