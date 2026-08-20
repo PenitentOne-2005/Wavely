@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { memo } from "react";
 import { createPortal } from "react-dom";
 import type { TrackItemProps } from "./interface";
 import { usePlayerStore } from "@/shared/store";
+import useDropdownMenu from "./hooks";
 import styles from "./TrackItem.module.css";
 
 const TrackItem = ({
@@ -18,58 +19,18 @@ const TrackItem = ({
   const isPlaying = usePlayerStore((state) => state.isPlaying);
   const isLoading = usePlayerStore((state) => state.isLoading);
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [menuPosition, setMenuPosition] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
-
-  const menuRef = useRef<HTMLDivElement>(null);
-  const addButtonRef = useRef<HTMLButtonElement>(null);
+  const {
+    isOpen: menuOpen,
+    position: menuPosition,
+    menuRef,
+    triggerRef: addButtonRef,
+    toggle: handleToggleMenu,
+    close: closeMenu,
+  } = useDropdownMenu();
 
   const isCurrent = currentTrack?.audioUrl === track.audioUrl;
   const trackKey = track.jamendoId || String(track.id);
   const titleId = `track-title-${trackKey}`;
-
-  useEffect(() => {
-    if (!menuOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMenuOpen(false);
-        addButtonRef.current?.focus();
-      }
-    };
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node) &&
-        !addButtonRef.current?.contains(e.target as Node)
-      ) {
-        setMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [menuOpen]);
-
-  const handleToggleMenu = () => {
-    if (!menuOpen && addButtonRef.current) {
-      const rect = addButtonRef.current.getBoundingClientRect();
-      setMenuPosition({
-        top: rect.bottom + window.scrollY + 8,
-        left: rect.right + window.scrollX - 180,
-      });
-    }
-    setMenuOpen(!menuOpen);
-  };
 
   const playLabel =
     isCurrent && isLoading
@@ -159,8 +120,7 @@ const TrackItem = ({
                         role="menuitem"
                         onClick={() => {
                           onAddTrackToPlaylist(pl.id, track);
-                          setMenuOpen(false);
-                          addButtonRef.current?.focus();
+                          closeMenu();
                         }}
                         className={styles.menuItem}
                       >
@@ -181,4 +141,4 @@ const TrackItem = ({
   );
 };
 
-export default TrackItem;
+export default memo(TrackItem);

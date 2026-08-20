@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { TrackListProps } from "./interface";
 import { TrackItem } from "./components";
 import styles from "./TrackList.module.css";
@@ -78,4 +79,4 @@ const TrackList = ({
   );
 };
 
-export default TrackList;
+export default memo(TrackList);

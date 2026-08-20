@@ -1,6 +1,6 @@
 import type { Playlist, Track } from "@/shared/types";
 
-interface HomeState {
+export interface HomeState {
   playlists: Playlist[];
   selectedPlaylist: any | null;
   playlistTracks: Track[];
@@ -26,7 +26,7 @@ export const initialState: HomeState = {
   searchLoading: false,
 };
 
-type HomeAction =
+export type HomeAction =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_PLAYLISTS"; payload: Playlist[] }
   | { type: "ADD_PLAYLIST"; payload: any }

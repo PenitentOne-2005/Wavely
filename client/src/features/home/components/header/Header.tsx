@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { HeaderProps } from "./interface";
 import { Input } from "@/shared/ui";
 import styles from "./Header.module.css";
@@ -25,4 +26,4 @@ const Header = ({ searchQuery, setSearchQuery, onSearch }: HeaderProps) => {
   );
 };
 
-export default Header;
+export default memo(Header);

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { PlaylistListProps } from "./interface";
 import { Input } from "@/shared/ui";
 import styles from "./Playlist.module.css";
@@ -80,4 +81,4 @@ const PlaylistList = ({
   );
 };
 
-export default PlaylistList;
+export default memo(PlaylistList);

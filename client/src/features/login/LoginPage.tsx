@@ -1,19 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import Cookies from "js-cookie";
+import { useForm } from "react-hook-form";
 import type { AuthDto } from "./interface";
-import { api } from "@/shared/api";
+import { useAuthForm } from "./hooks";
 import { Input } from "@/shared/ui";
 import styles from "./LoginPage.module.css";
 
 const AuthPage = () => {
-  const router = useRouter();
-  const [isLogin, setIsLogin] = useState(true);
-  const [serverError, setServerError] = useState("");
-
   const {
     register,
     handleSubmit,
@@ -21,28 +14,7 @@ const AuthPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<AuthDto>({ mode: "onChange" });
 
-  const onSubmit: SubmitHandler<AuthDto> = async (data) => {
-    setServerError("");
-    const endpoint = isLogin ? "/auth/login" : "/auth/register";
-
-    try {
-      const response = await api.post(endpoint, data);
-      const { token } = response.data;
-
-      Cookies.set("token", token, { expires: 7 });
-
-      router.push("/");
-      router.refresh();
-    } catch (err: any) {
-      setServerError(err.response?.data?.message || "Что-то пошло не так");
-    }
-  };
-
-  const toggleMode = () => {
-    setIsLogin(!isLogin);
-    setServerError("");
-    reset();
-  };
+  const { isLogin, serverError, onSubmit, toggleMode } = useAuthForm(reset);
 
   return (
     <main className={styles.container}>
